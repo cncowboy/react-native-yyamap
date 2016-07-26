@@ -14,8 +14,8 @@ import {
     ColorPropType,
 } from 'react-native';
 
-import deprecatedPropType from 'react-native/Libraries/Utilities/deprecatedPropType';
-import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+// import deprecatedPropType from 'react-native/Libraries/Utilities/deprecatedPropType';
+// import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
 
 const RCTAMapConstants = UIManager.RCTAMap.Constants;
@@ -219,25 +219,6 @@ const MAMapView= React.createClass({
        */
       id: React.PropTypes.string,
 
-      /**
-       * Deprecated. Use the left/right/detailsCalloutView props instead.
-       */
-      hasLeftCallout: deprecatedPropType(
-        React.PropTypes.bool,
-        'Use `leftCalloutView` instead.'
-      ),
-      hasRightCallout: deprecatedPropType(
-        React.PropTypes.bool,
-        'Use `rightCalloutView` instead.'
-      ),
-      onLeftCalloutPress: deprecatedPropType(
-        React.PropTypes.func,
-        'Use `leftCalloutView` instead.'
-      ),
-      onRightCalloutPress: deprecatedPropType(
-        React.PropTypes.func,
-        'Use `rightCalloutView` instead.'
-      ),
     })),
 
     /**
@@ -361,7 +342,7 @@ const MAMapView= React.createClass({
         rightCalloutView: undefined,
       };
       result.id = id || encodeURIComponent(JSON.stringify(result));
-      result.image = image && resolveAssetSource(image);
+      result.image = image;// && resolveAssetSource(image);
       return result;
     });
     overlays = overlays && overlays.map((overlay: Object) => {
