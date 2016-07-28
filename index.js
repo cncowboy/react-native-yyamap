@@ -12,6 +12,7 @@ import {
     UIManager,
     processColor,
     ColorPropType,
+    findNodeHandle,
 } from 'react-native';
 
 // import deprecatedPropType from 'react-native/Libraries/Utilities/deprecatedPropType';
@@ -455,7 +456,7 @@ const MAMapView= React.createClass({
           return;
       }
       UIManager.dispatchViewManagerCommand(
-          ReactNative.findNodeHandle(this.refs["aMap"]),
+          findNodeHandle(this.refs["aMap"]),
           UIManager.RCTBaiduMap.Commands.zoomToLocs,
           [locs]
       );
