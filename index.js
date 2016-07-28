@@ -434,6 +434,7 @@ const MAMapView= React.createClass({
     return (
       <RCTAMap
         {...this.props}
+        ref="aMap"
         annotations={annotations}
         children={children}
         followUserLocation={followUserLocation}
@@ -445,6 +446,19 @@ const MAMapView= React.createClass({
         onAnnotationBlur={onAnnotationBlur}
       />
     );
+  },
+  zoomToLocs(locs) {
+      if (!Array.isArray(locs) && Object.prototype.toString.call(locs) === '[object Object]') {
+          locs = [locs];
+      }
+      if (!Array.isArray(locs)) {
+          return;
+      }
+      UIManager.dispatchViewManagerCommand(
+          ReactNative.findNodeHandle(this.refs["aMap"]),
+          UIManager.RCTBaiduMap.Commands.zoomToLocs,
+          [locs]
+      );
   },
 });
 
