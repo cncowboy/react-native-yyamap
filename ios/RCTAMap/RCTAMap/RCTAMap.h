@@ -40,4 +40,9 @@ RCT_EXTERN const CGFloat RCTAMapZoomBoundBuffer;
 - (void)setAnnotations:(NSArray<RCTAMapAnnotation *> *)annotations;
 - (void)setOverlays:(NSArray<RCTAMapOverlay *> *)overlays;
 
+
+- (void)zoomToSpan;
+- (void)zoomToSpan:(NSArray<RCTAMapAnnotation *> *)annotations andOverlays:(NSArray<RCTAMapOverlay *> *)overlays;
+- (void)zoomToSpan:(NSArray<CLLocation *> *)locations;
+
 @end

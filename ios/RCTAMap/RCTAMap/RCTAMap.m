@@ -203,5 +203,122 @@ const CGFloat RCTAMapZoomBoundBuffer = 0.01;
     }
 }
 
+- (void)zoomToSpan:(NSArray<RCTAMapAnnotation *> *)annotations andOverlays:(NSArray<RCTAMapOverlay *> *)overlays
+{
+    CLLocationDegrees minLat = 0.0;
+    CLLocationDegrees maxLat = 0.0;
+    CLLocationDegrees minLon = 0.0;
+    CLLocationDegrees maxLon = 0.0;
+    BOOL hasInitialized = NO;
+    NSInteger index = 0;
+    if (annotations != nil) {
+        for (RCTAMapAnnotation *annotation in annotations) {
+            if (index == 0 && hasInitialized == NO) {
+                minLat = maxLat = annotation.coordinate.latitude;
+                minLon = maxLon = annotation.coordinate.longitude;
+                hasInitialized = YES;
+            } else {
+                minLat = MIN(minLat, annotation.coordinate.latitude);
+                minLon = MIN(minLon, annotation.coordinate.longitude);
+                maxLat = MAX(maxLat, annotation.coordinate.latitude);
+                maxLon = MAX(maxLon, annotation.coordinate.longitude);
+            }
+            index ++;
+        }
+    }
+    index = 0;
+    if (overlays != nil) {
+        for (RCTAMapOverlay *overlay in overlays) {
+            for (NSInteger i = 0; i < overlay.pointCount; i++) {
+                MAMapPoint pt = overlay.points[i];
+                CLLocationCoordinate2D coordinate = MACoordinateForMapPoint(pt);
+                if (index == 0 && i == 0 && hasInitialized == NO) {
+                    minLat = maxLat = coordinate.latitude;
+                    minLon = maxLon = coordinate.longitude;
+                    hasInitialized = YES;
+                } else {
+                    minLat = MIN(minLat, coordinate.latitude);
+                    minLon = MIN(minLon, coordinate.longitude);
+                    maxLat = MAX(maxLat, coordinate.latitude);
+                    maxLon = MAX(maxLon, coordinate.longitude);
+                }
+            }
+            index ++;
+        }
+    }
+    
+    if (hasInitialized) {
+        CLLocationCoordinate2D center;
+        center.latitude = (maxLat + minLat) * .5f;
+        center.longitude = (minLon + maxLon) * .5f;
+        MACoordinateSpan span = MACoordinateSpanMake(maxLat - minLat + 0.02, maxLon - minLon + 0.02);
+        
+        MACoordinateRegion region = MACoordinateRegionMake(center, span);
+        
+        [self setRegion:region animated:YES];
+    }
+}
+
+- (void)zoomToSpan
+{
+    [self zoomToSpan:self.annotations andOverlays:self.overlays];
+}
+
+- (void)zoomToSpan:(NSArray<CLLocation *> *)locations
+{
+    if (locations == nil || locations.count == 0) {
+        [self zoomToSpan];
+    } else if (locations.count == 1) {
+        CLLocation *onlyLocation = locations.firstObject;
+        [self zoomToCenter:onlyLocation.coordinate];
+    } else {
+        CLLocationDegrees minLat = 0.0;
+        CLLocationDegrees maxLat = 0.0;
+        CLLocationDegrees minLon = 0.0;
+        CLLocationDegrees maxLon = 0.0;
+        NSInteger index = 0;
+        for (CLLocation *location in locations) {
+            if (index == 0) {
+                minLat = maxLat = location.coordinate.latitude;
+                minLon = maxLon = location.coordinate.longitude;
+            } else {
+                minLat = MIN(minLat, location.coordinate.latitude);
+                minLon = MIN(minLon, location.coordinate.longitude);
+                maxLat = MAX(maxLat, location.coordinate.latitude);
+                maxLon = MAX(maxLon, location.coordinate.longitude);
+            }
+            index ++;
+        }
+        
+        CLLocationCoordinate2D center;
+        center.latitude = (maxLat + minLat) * .5f;
+        center.longitude = (minLon + maxLon) * .5f;
+        MACoordinateSpan span = MACoordinateSpanMake(maxLat - minLat + 0.02, maxLon - minLon + 0.02);
+        
+        MACoordinateRegion region = MACoordinateRegionMake(center, span);
+        
+        [self setRegion:region animated:YES];
+        
+    }
+}
+
+- (BOOL)isValidLon:(float)lon lat:(float)lat {//判断经纬度是否合法
+    if (ABS(lon)>180 || ABS(lat)>90) {
+        return NO;
+    }
+    return YES;
+}
+
+- (void)zoomToCenter:(CLLocationCoordinate2D)coordinate
+{
+    float longitude = coordinate.longitude;
+    float latitude = coordinate.latitude;
+    if (![self isValidLon:longitude lat:latitude]) {
+        return;
+    }
+    BOOL animation = TRUE;
+    [super setCenterCoordinate:coordinate animated:animation];
+    [super setZoomLevel:19 animated:animation];
+}
 
 @end
