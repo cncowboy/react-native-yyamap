@@ -457,7 +457,7 @@ const MAMapView= React.createClass({
       }
       UIManager.dispatchViewManagerCommand(
           findNodeHandle(this.refs["aMap"]),
-          UIManager.RCTBaiduMap.Commands.zoomToLocs,
+          UIManager.RCTAMap.Commands.zoomToLocs,
           [locs]
       );
   },
