@@ -63,6 +63,7 @@ const MAMapView= React.createClass({
      * @platform ios
      */
     followUserLocation: React.PropTypes.bool,
+    followUserLocationWithHeading: React.PropTypes.bool,
 
     /**
      * If `false` points of interest won't be displayed on the map.
@@ -289,7 +290,7 @@ const MAMapView= React.createClass({
   },
 
   render: function() {
-    let children = [], {annotations, overlays, followUserLocation} = this.props;
+    let children = [], {annotations, overlays, followUserLocation, followUserLocationWithHeading} = this.props;
     annotations = annotations && annotations.map((annotation: Object) => {
       let {
         id,
@@ -439,6 +440,7 @@ const MAMapView= React.createClass({
         annotations={annotations}
         children={children}
         followUserLocation={followUserLocation}
+        followUserLocationWithHeading={followUserLocationWithHeading}
         overlays={overlays}
         onPress={onPress}
         onChange={onChange}
