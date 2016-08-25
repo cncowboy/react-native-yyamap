@@ -23,6 +23,7 @@ RCT_EXTERN const CGFloat RCTAMapZoomBoundBuffer;
 @interface RCTAMap : MAMapView
 
 @property (nonatomic, assign) BOOL followUserLocation;
+@property (nonatomic, assign) BOOL followUserLocationWithHeading;
 @property (nonatomic, assign) BOOL hasStartedRendering;
 @property (nonatomic, assign) CGFloat minDelta;
 @property (nonatomic, assign) CGFloat maxDelta;

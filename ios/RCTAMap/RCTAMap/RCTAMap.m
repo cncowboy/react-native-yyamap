@@ -98,6 +98,34 @@ const CGFloat RCTAMapZoomBoundBuffer = 0.01;
     }
 }
 
+- (void)setFollowUserLocation:(BOOL)followUserLocation
+{
+    if (self.followUserLocation != followUserLocation) {
+        if (self.followUserLocationWithHeading) {
+            self.userTrackingMode = MAUserTrackingModeFollowWithHeading;
+        } else if (followUserLocation) {
+            self.userTrackingMode = MAUserTrackingModeFollow;
+        } else {
+            self.userTrackingMode = MAUserTrackingModeNone;
+        }
+        _followUserLocation = followUserLocation;
+    }
+}
+
+- (void)setFollowUserLocationWithHeading:(BOOL)followUserLocationWithHeading
+{
+    if (self.followUserLocationWithHeading != followUserLocationWithHeading) {
+        if (followUserLocationWithHeading) {
+            self.userTrackingMode = MAUserTrackingModeFollowWithHeading;
+        } else if (self.followUserLocation) {
+            self.userTrackingMode = MAUserTrackingModeFollow;
+        } else {
+            self.userTrackingMode = MAUserTrackingModeNone;
+        }
+        _followUserLocationWithHeading = followUserLocationWithHeading;
+    }
+}
+
 - (void)setRegion:(MACoordinateRegion)region animated:(BOOL)animated
 {
     if (!CLLocationCoordinate2DIsValid(region.center)) {
